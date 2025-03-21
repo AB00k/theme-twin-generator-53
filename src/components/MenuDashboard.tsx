@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import { BarChart, Users, Image, FileText, CheckCircle, MapPin, Filter, ArrowUpDown, ArrowDown, ArrowUp, List } from 'lucide-react';
+import { BarChart, Users, Image, FileText, CheckCircle, MapPin, Filter, ArrowUpDown, ArrowDown, ArrowUp, List, ChevronUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const platformColors = {
   "All Platforms": "bg-orange-400",
@@ -36,6 +37,7 @@ interface LocationData {
 const MenuDashboard = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("All Platforms");
   const [activeTab, setActiveTab] = useState("top");
+  const [selectedLocationCount, setSelectedLocationCount] = useState(2);
   
   const menuItems: MenuPerformanceItem[] = [
     { name: "Chicken Biryani", sales: 1320, revenue: "AED 72,600", profit: "AED 43,560" },
@@ -189,27 +191,50 @@ const MenuDashboard = () => {
                 <MapPin size={20} className="text-purple-500 mr-2" />
                 <h2 className="text-xl font-bold">Menu Geography Trends</h2>
               </div>
-              <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm" className="h-8">
-                  <Filter size={14} className="mr-1" />
-                  Areas (2)
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 px-2" aria-label="Decrease">-</Button>
-                <span className="text-sm">2</span>
-                <Button variant="outline" size="sm" className="h-8 px-2" aria-label="Increase">+</Button>
-                <span className="text-sm text-gray-500">Showing 2 areas</span>
+              <div className="flex items-center space-x-2">
+                <Select 
+                  value={selectedLocationCount.toString()} 
+                  onValueChange={(value) => setSelectedLocationCount(parseInt(value))}
+                >
+                  <SelectTrigger className="w-[130px] h-8">
+                    <SelectValue placeholder="Location count" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 Area</SelectItem>
+                    <SelectItem value="2">2 Areas</SelectItem>
+                    <SelectItem value="3">3 Areas</SelectItem>
+                    <SelectItem value="4">4 Areas</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <ToggleGroup type="single" size="sm" variant="outline">
+                  <ToggleGroupItem value="grid" aria-label="Grid view">
+                    <ChevronUp size={16} />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="list" aria-label="List view">
+                    <ChevronDown size={16} />
+                  </ToggleGroupItem>
+                </ToggleGroup>
               </div>
             </div>
             
-            <div className="space-y-8">
-              {locationData.map((location, locationIndex) => (
-                <div key={locationIndex}>
-                  <h3 className="text-lg font-semibold mb-4">{location.name}</h3>
-                  <div className="space-y-4">
+            <div className="space-y-6">
+              {locationData.slice(0, selectedLocationCount).map((location, locationIndex) => (
+                <div key={locationIndex} className="bg-gray-50 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center">
+                    <span className="h-2 w-2 rounded-full bg-purple-500 mr-2"></span>
+                    {location.name}
+                  </h3>
+                  <div className="space-y-3">
                     {location.items.map((item, itemIndex) => (
                       <div key={itemIndex} className="flex items-center justify-between">
-                        <span className="text-gray-700">{item.name}</span>
-                        <span className="text-purple-500 font-medium">{item.sold} sold</span>
+                        <div className="flex items-center">
+                          <span className="text-gray-700">{item.name}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Progress value={(item.sold / 320) * 100} className="h-2 w-24 mr-3" />
+                          <span className="text-purple-500 font-medium">{item.sold} sold</span>
+                        </div>
                       </div>
                     ))}
                   </div>
