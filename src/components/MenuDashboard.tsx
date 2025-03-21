@@ -1,13 +1,36 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import { BarChart, Users, Image, FileText, CheckCircle, MapPin, Filter, ArrowUpDown, ArrowDown, ArrowUp, List, ChevronUp, ChevronDown } from 'lucide-react';
+import { 
+  BarChart, 
+  Users, 
+  Image, 
+  FileText, 
+  CheckCircle, 
+  MapPin, 
+  Filter, 
+  ArrowUpDown, 
+  ArrowDown, 
+  ArrowUp, 
+  List, 
+  ChevronUp, 
+  ChevronDown,
+  ChevronRight
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const platformColors = {
   "All Platforms": "bg-orange-400",
@@ -34,10 +57,18 @@ interface LocationData {
   items: GeographyItem[];
 }
 
+interface MenuCategory {
+  name: string;
+  itemCount: number;
+  orders: number;
+  revenue: string;
+}
+
 const MenuDashboard = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("All Platforms");
   const [activeTab, setActiveTab] = useState("top");
   const [selectedLocationCount, setSelectedLocationCount] = useState(2);
+  const [isMenuAnalysisOpen, setIsMenuAnalysisOpen] = useState(false);
   
   const menuItems: MenuPerformanceItem[] = [
     { name: "Chicken Biryani", sales: 1320, revenue: "AED 72,600", profit: "AED 43,560" },
@@ -64,6 +95,17 @@ const MenuDashboard = () => {
         { name: "Pasta Alfredo", sold: 180 },
       ]
     }
+  ];
+
+  const menuCategories: MenuCategory[] = [
+    { name: "Main Course", itemCount: 1, orders: 1320, revenue: "AED 72,600" },
+    { name: "Burgers", itemCount: 1, orders: 1200, revenue: "AED 54,000" },
+    { name: "Pizza", itemCount: 1, orders: 1120, revenue: "AED 44,800" },
+    { name: "Pasta", itemCount: 1, orders: 1010, revenue: "AED 50,500" },
+    { name: "Seafood", itemCount: 1, orders: 910, revenue: "AED 68,250" },
+    { name: "Salads", itemCount: 1, orders: 390, revenue: "AED 13,650" },
+    { name: "Sides", itemCount: 1, orders: 340, revenue: "AED 5,100" },
+    { name: "Desserts", itemCount: 1, orders: 305, revenue: "AED 9,150" },
   ];
 
   return (
@@ -246,15 +288,59 @@ const MenuDashboard = () => {
       </div>
       
       <div className="mt-8 border-t border-gray-200 pt-8">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center">
-            <List size={18} className="mr-2" />
-            <h2 className="text-xl font-bold">Complete Menu Analysis</h2>
+        <Collapsible
+          open={isMenuAnalysisOpen}
+          onOpenChange={setIsMenuAnalysisOpen}
+          className="space-y-2"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center">
+              <List size={18} className="mr-2" />
+              <h2 className="text-xl font-bold">Complete Menu Analysis</h2>
+            </div>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="sm" className="w-9 p-0">
+                {isMenuAnalysisOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </Button>
+            </CollapsibleTrigger>
           </div>
-          <ArrowDown size={20} />
-        </div>
+          
+          <CollapsibleContent className="space-y-2">
+            {menuCategories.map((category, index) => (
+              <div 
+                key={index} 
+                className="border-b border-gray-200 py-4 flex items-center justify-between hover:bg-gray-50 rounded-md px-4"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center">
+                    <h3 className="text-lg font-semibold">{category.name}</h3>
+                    <span className="text-gray-500 text-sm ml-2">({category.itemCount} {category.itemCount === 1 ? 'item' : 'items'})</span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center">
+                    <span className="font-medium mr-1">{category.orders}</span>
+                    <span className="text-gray-500">sold</span>
+                  </div>
+                  
+                  <div className="flex items-center min-w-[120px]">
+                    <span className="font-medium">{category.revenue}</span>
+                  </div>
+                  
+                  <Button variant="ghost" size="sm" className="p-0 h-8 w-8">
+                    <ChevronDown size={16} />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CollapsibleContent>
+        </Collapsible>
         
-        <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white py-3 rounded">
+        <Button 
+          onClick={() => setIsMenuAnalysisOpen(!isMenuAnalysisOpen)} 
+          className="w-full bg-gray-800 hover:bg-gray-700 text-white py-3 rounded mt-4"
+        >
           View Complete Menu Analysis
         </Button>
       </div>
