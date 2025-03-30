@@ -15,7 +15,7 @@ const AdMetricCard = ({ icon, label, value, change, iconBackground = "bg-blue-50
   const isPositive = change ? !change.includes('-') : false;
   
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm">
+    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <div className={cn("p-3 rounded-full text-white", iconBackground)}>
