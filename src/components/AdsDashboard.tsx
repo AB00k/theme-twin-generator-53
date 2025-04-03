@@ -471,39 +471,48 @@ const AdsDashboard = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="max-h-[500px] overflow-y-auto pr-1">
+                    <div className="max-h-[500px] overflow-y-auto pr-1 grid grid-cols-1 gap-4">
                       {platforms.map((platform) => (
-                        <Card key={platform.id} className="overflow-hidden border border-gray-200 mb-4">
-                          <CardHeader className={`${platform.color} py-3 text-white`}>
-                            <CardTitle className="text-base">{platform.name}</CardTitle>
-                          </CardHeader>
-                          <CardContent className="pt-4">
-                            <div className="grid grid-cols-3 gap-2 text-sm mb-4">
-                              <div>
-                                <p className="text-gray-500">Active Ads</p>
-                                <p className="font-semibold">{platform.activeAds}</p>
+                        <Card key={platform.id} className="border border-gray-200">
+                          <CardContent className="p-4">
+                            <div className="flex flex-col">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <div className={`${platform.color} w-3 h-3 rounded-full`}></div>
+                                  <h3 className="font-medium">{platform.name}</h3>
+                                </div>
+                                <span className="text-xs font-medium bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                                  ROAS: {platform.roas}x
+                                </span>
                               </div>
-                              <div>
-                                <p className="text-gray-500">ROAS</p>
-                                <p className="font-semibold">{platform.roas}x</p>
+                              
+                              <div className="flex items-center justify-between text-sm mb-3">
+                                <div className="flex gap-4">
+                                  <div>
+                                    <span className="text-gray-500 mr-1">Active Ads:</span>
+                                    <span className="font-semibold">{platform.activeAds}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-gray-500 mr-1">Spend:</span>
+                                    <span className="font-semibold">AED {platform.spend}</span>
+                                  </div>
+                                  <div>
+                                    <span className="text-gray-500 mr-1">Revenue:</span>
+                                    <span className="font-semibold">AED {platform.revenue}</span>
+                                  </div>
+                                </div>
                               </div>
-                              <div>
-                                <p className="text-gray-500">Spend</p>
-                                <p className="font-semibold">AED {platform.spend}</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Revenue</p>
-                                <p className="font-semibold">AED {platform.revenue}</p>
-                              </div>
+                              
+                              <Button 
+                                size="sm"
+                                variant="outline" 
+                                className="w-full h-8 mt-1"
+                                onClick={() => setSelectedCampaign(platform.id)}
+                              >
+                                View {platform.name} Campaigns
+                                <ArrowRight size={14} className="ml-1" />
+                              </Button>
                             </div>
-                            <Button 
-                              variant="outline" 
-                              className="w-full text-sm h-8"
-                              onClick={() => setSelectedCampaign(platform.id)}
-                            >
-                              View {platform.name} Campaigns
-                              <ArrowRight size={14} className="ml-2" />
-                            </Button>
                           </CardContent>
                         </Card>
                       ))}

@@ -42,4 +42,3 @@ const AdMetricCard = ({ icon, label, value, change, iconBackground = "bg-blue-50
 };
 
 export default AdMetricCard;
-
