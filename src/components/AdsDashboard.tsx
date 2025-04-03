@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AdMetricCard from './AdMetricCard';
 import { Tag, DollarSign, ShoppingCart, BarChart, Percent, Users, TrendingUp, Filter, ArrowRight, Clock, Calendar, ExternalLink } from 'lucide-react';
@@ -222,7 +221,6 @@ const AdsDashboard = () => {
     }
   ];
 
-  // Calculate total budget, spend and remaining
   const totalBudget = platforms.reduce((sum, platform) => 
     sum + platform.campaigns.reduce((s, c) => s + c.budget, 0), 0);
   
@@ -232,7 +230,6 @@ const AdsDashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header with better controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <h1 className="text-3xl font-bold text-red-500 mb-4 sm:mb-0">Performance Overview</h1>
         
@@ -270,7 +267,6 @@ const AdsDashboard = () => {
         </div>
       </div>
 
-      {/* Performance Insight Card */}
       <Card className="mb-8 border-l-4 border-l-green-500 shadow-sm hover:shadow transition-shadow">
         <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
@@ -473,7 +469,7 @@ const AdsDashboard = () => {
                   ) : (
                     <div className="max-h-[500px] overflow-y-auto pr-1 grid grid-cols-1 gap-4">
                       {platforms.map((platform) => (
-                        <Card key={platform.id} className="border border-gray-200">
+                        <Card key={platform.id} className={`border border-gray-200 ${platform.color} bg-opacity-10`}>
                           <CardContent className="p-4">
                             <div className="flex flex-col">
                               <div className="flex items-center justify-between mb-3">
@@ -481,24 +477,22 @@ const AdsDashboard = () => {
                                   <div className={`${platform.color} w-3 h-3 rounded-full`}></div>
                                   <h3 className="font-medium">{platform.name}</h3>
                                 </div>
-                                <span className="text-xs font-medium bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                                <span className={`text-xs font-medium px-2 py-1 rounded ${platform.color} bg-opacity-20`}>
                                   ROAS: {platform.roas}x
                                 </span>
                               </div>
                               
                               <div className="flex items-center justify-between text-sm mb-3">
-                                <div className="flex gap-4">
+                                <div className="flex flex-wrap gap-4">
                                   <div>
-                                    <span className="text-gray-500 mr-1">Active Ads:</span>
+                                    <span className="text-gray-700 mr-1">Active Ads:</span>
                                     <span className="font-semibold">{platform.activeAds}</span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-500 mr-1">Spend:</span>
-                                    <span className="font-semibold">AED {platform.spend}</span>
+                                    <span className="text-gray-700 mr-1">Spend: <span className="font-semibold">AED {platform.spend}</span></span>
                                   </div>
                                   <div>
-                                    <span className="text-gray-500 mr-1">Revenue:</span>
-                                    <span className="font-semibold">AED {platform.revenue}</span>
+                                    <span className="text-gray-700 mr-1">Revenue: <span className="font-semibold">AED {platform.revenue}</span></span>
                                   </div>
                                 </div>
                               </div>
@@ -506,7 +500,7 @@ const AdsDashboard = () => {
                               <Button 
                                 size="sm"
                                 variant="outline" 
-                                className="w-full h-8 mt-1"
+                                className="w-full h-8 mt-1 bg-white hover:bg-gray-50"
                                 onClick={() => setSelectedCampaign(platform.id)}
                               >
                                 View {platform.name} Campaigns
@@ -525,7 +519,6 @@ const AdsDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Primary Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <AdMetricCard 
           icon={<TrendingUp size={24} />}
@@ -553,9 +546,7 @@ const AdsDashboard = () => {
         />
       </div>
 
-      {/* Budget and Spend Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Ad Spend Card */}
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl">Ad Spend</CardTitle>
@@ -573,7 +564,6 @@ const AdsDashboard = () => {
               </div>
             </div>
             
-            {/* Simplified sample chart */}
             <div className="bg-gray-100 rounded-lg h-36 w-full flex items-end p-4 gap-2">
               {[10, 15, 20, 12, 8, 25, 18, 22, 30, 20, 15, 35].map((h, i) => (
                 <div 
@@ -586,7 +576,6 @@ const AdsDashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Ads Budget Card */}
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-xl">
@@ -647,7 +636,6 @@ const AdsDashboard = () => {
         </Card>
       </div>
 
-      {/* Secondary Metrics - Live Ads & Others */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <AdMetricCard 
           icon={<Tag size={24} />}
