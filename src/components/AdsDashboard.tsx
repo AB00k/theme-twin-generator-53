@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import AdMetricCard from './AdMetricCard';
-import { Tag, DollarSign, ShoppingCart, BarChart, Percent, Users, TrendingUp, Filter, ArrowRight, Clock, Calendar, ExternalLink } from 'lucide-react';
+import { Tag, DollarSign, ShoppingCart, BarChart, Percent, Users, TrendingUp, Filter, ArrowRight, Clock, Calendar, ExternalLink, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
@@ -29,6 +30,7 @@ const AdsDashboard = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("all");
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [campaignDetails, setCampaignDetails] = useState(null);
+  const [viewMode, setViewMode] = useState("optimize"); // "optimize" or "view"
   
   const platforms = [
     { 
@@ -274,247 +276,323 @@ const AdsDashboard = () => {
               <h2 className="text-xl font-semibold mb-2">Performance Summary</h2>
               <p className="text-gray-500">ROAS is at 0.97x across all platforms with AED 293.40 in revenue from AED 301.2 spend.</p>
             </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button className="bg-green-500 hover:bg-green-600">
-                  Optimize Campaigns
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Campaign Optimization</SheetTitle>
-                  <SheetDescription>
-                    Optimize your ads across different delivery platforms
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-6 space-y-4">
-                  {campaignDetails ? (
-                    <div>
-                      <Button 
-                        variant="ghost" 
-                        className="mb-4" 
-                        onClick={() => setCampaignDetails(null)}
-                      >
-                        ← Back to campaign list
-                      </Button>
-                      
-                      <Card className="overflow-hidden border border-gray-200">
-                        <CardHeader className={`py-3 ${campaignDetails.platform.color} text-white`}>
-                          <CardTitle className="text-base">{campaignDetails.name}</CardTitle>
-                          <CardDescription className="text-white text-opacity-90">
-                            {campaignDetails.platform.name}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-4">
-                          <div className="space-y-6">
-                            <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                              <div>
-                                <p className="text-gray-500">ROAS</p>
-                                <p className="font-semibold">{campaignDetails.roas}x</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Budget</p>
-                                <p className="font-semibold">AED {campaignDetails.budget}</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Spend</p>
-                                <p className="font-semibold">AED {campaignDetails.spend}</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Remaining</p>
-                                <p className="font-semibold">AED {(campaignDetails.budget - campaignDetails.spend).toFixed(1)}</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Utilization</p>
-                                <p className="font-semibold">{((campaignDetails.spend / campaignDetails.budget) * 100).toFixed(0)}%</p>
-                              </div>
-                              <div>
-                                <p className="text-gray-500">Status</p>
-                                <p className="font-semibold text-green-600">{campaignDetails.status}</p>
-                              </div>
-                            </div>
-                            
-                            <div className="pt-4 border-t">
-                              <h4 className="text-sm font-medium mb-3">Performance Details</h4>
+            <div className="flex gap-4 flex-col sm:flex-row">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button className="bg-green-500 hover:bg-green-600">
+                    Optimize Campaigns
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>Campaign Optimization</SheetTitle>
+                    <SheetDescription>
+                      Optimize your ads across different delivery platforms
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-4">
+                    {campaignDetails ? (
+                      <div>
+                        <Button 
+                          variant="ghost" 
+                          className="mb-4" 
+                          onClick={() => setCampaignDetails(null)}
+                        >
+                          ← Back to campaign list
+                        </Button>
+                        
+                        <Card className="overflow-hidden border border-gray-200">
+                          <CardHeader className={`py-3 ${campaignDetails.platform.color} text-white`}>
+                            <CardTitle className="text-base">{campaignDetails.name}</CardTitle>
+                            <CardDescription className="text-white text-opacity-90">
+                              {campaignDetails.platform.name}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="pt-4">
+                            <div className="space-y-6">
                               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                                 <div>
-                                  <p className="text-gray-500">Menu Views</p>
-                                  <p className="font-semibold">{campaignDetails.views}</p>
+                                  <p className="text-gray-500">ROAS</p>
+                                  <p className="font-semibold">{campaignDetails.roas}x</p>
                                 </div>
                                 <div>
-                                  <p className="text-gray-500">Clicks</p>
-                                  <p className="font-semibold">{campaignDetails.clicks}</p>
+                                  <p className="text-gray-500">Budget</p>
+                                  <p className="font-semibold">AED {campaignDetails.budget}</p>
                                 </div>
                                 <div>
-                                  <p className="text-gray-500">New Customers</p>
-                                  <p className="font-semibold">{campaignDetails.newCustomers}</p>
+                                  <p className="text-gray-500">Spend</p>
+                                  <p className="font-semibold">AED {campaignDetails.spend}</p>
                                 </div>
                                 <div>
-                                  <p className="text-gray-500">Returning Customers</p>
-                                  <p className="font-semibold">{campaignDetails.returningCustomers}</p>
+                                  <p className="text-gray-500">Remaining</p>
+                                  <p className="font-semibold">AED {(campaignDetails.budget - campaignDetails.spend).toFixed(1)}</p>
                                 </div>
                                 <div>
-                                  <p className="text-gray-500">Conversion Rate</p>
-                                  <p className="font-semibold">{campaignDetails.conversionRate}</p>
+                                  <p className="text-gray-500">Utilization</p>
+                                  <p className="font-semibold">{((campaignDetails.spend / campaignDetails.budget) * 100).toFixed(0)}%</p>
                                 </div>
                                 <div>
-                                  <p className="text-gray-500">Revenue</p>
-                                  <p className="font-semibold">AED {campaignDetails.revenue}</p>
+                                  <p className="text-gray-500">Status</p>
+                                  <p className="font-semibold text-green-600">{campaignDetails.status}</p>
                                 </div>
                               </div>
-                            </div>
-                            
-                            <div className="pt-4 border-t">
-                              <h4 className="text-sm font-medium mb-3">Campaign Timeline</h4>
-                              <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                                <div>
-                                  <p className="text-gray-500">Start Date</p>
-                                  <p className="font-semibold">{campaignDetails.startDate}</p>
-                                </div>
-                                <div>
-                                  <p className="text-gray-500">End Date</p>
-                                  <p className="font-semibold">{campaignDetails.endDate}</p>
+                              
+                              <div className="pt-4 border-t">
+                                <h4 className="text-sm font-medium mb-3">Performance Details</h4>
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                                  <div>
+                                    <p className="text-gray-500">Menu Views</p>
+                                    <p className="font-semibold">{campaignDetails.views}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">Clicks</p>
+                                    <p className="font-semibold">{campaignDetails.clicks}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">New Customers</p>
+                                    <p className="font-semibold">{campaignDetails.newCustomers}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">Returning Customers</p>
+                                    <p className="font-semibold">{campaignDetails.returningCustomers}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">Conversion Rate</p>
+                                    <p className="font-semibold">{campaignDetails.conversionRate}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">Revenue</p>
+                                    <p className="font-semibold">AED {campaignDetails.revenue}</p>
+                                  </div>
                                 </div>
                               </div>
+                              
+                              <div className="pt-4 border-t">
+                                <h4 className="text-sm font-medium mb-3">Campaign Timeline</h4>
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                                  <div>
+                                    <p className="text-gray-500">Start Date</p>
+                                    <p className="font-semibold">{campaignDetails.startDate}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500">End Date</p>
+                                    <p className="font-semibold">{campaignDetails.endDate}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div className="flex gap-3 pt-4">
+                                <Button variant="outline" className="flex-1">
+                                  Adjust Budget
+                                </Button>
+                                <Button className="flex-1 bg-green-500 hover:bg-green-600">
+                                  Optimize
+                                </Button>
+                              </div>
                             </div>
-                            
-                            <div className="flex gap-3 pt-4">
-                              <Button variant="outline" className="flex-1">
-                                Adjust Budget
-                              </Button>
-                              <Button className="flex-1 bg-green-500 hover:bg-green-600">
-                                Optimize
-                              </Button>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    ) : selectedCampaign ? (
+                      <div>
+                        <Button 
+                          variant="ghost" 
+                          className="mb-4" 
+                          onClick={() => setSelectedCampaign(null)}
+                        >
+                          ← Back to platforms
+                        </Button>
+                        
+                        <div className={`${platforms.find(p => p.id === selectedCampaign)?.color} py-3 px-4 rounded-t-lg text-white`}>
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-semibold text-lg">{platforms.find(p => p.id === selectedCampaign)?.name} Campaigns</h3>
+                            <div className="text-xs">
+                              <span className="opacity-90">ROAS: </span>
+                              <span className="font-bold">{platforms.find(p => p.id === selectedCampaign)?.roas}x</span>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  ) : selectedCampaign ? (
-                    <div>
-                      <Button 
-                        variant="ghost" 
-                        className="mb-4" 
-                        onClick={() => setSelectedCampaign(null)}
-                      >
-                        ← Back to platforms
-                      </Button>
-                      
-                      <div className={`${platforms.find(p => p.id === selectedCampaign)?.color} py-3 px-4 rounded-t-lg text-white`}>
-                        <div className="flex justify-between items-center">
-                          <h3 className="font-semibold text-lg">{platforms.find(p => p.id === selectedCampaign)?.name} Campaigns</h3>
-                          <div className="text-xs">
-                            <span className="opacity-90">ROAS: </span>
-                            <span className="font-bold">{platforms.find(p => p.id === selectedCampaign)?.roas}x</span>
                           </div>
                         </div>
+                        
+                        <div className="space-y-4 mt-4 max-h-[500px] overflow-y-auto pr-1">
+                          {platforms.find(p => p.id === selectedCampaign)?.campaigns.map(campaign => {
+                            const platform = platforms.find(p => p.id === selectedCampaign);
+                            return (
+                              <Card key={campaign.id} className="overflow-hidden border border-gray-200">
+                                <CardContent className="p-4">
+                                  <div className="flex justify-between items-start mb-3">
+                                    <h4 className="font-medium">{campaign.name}</h4>
+                                    <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded">
+                                      {campaign.status}
+                                    </span>
+                                  </div>
+                                  
+                                  <div className="grid grid-cols-2 gap-2 text-sm mb-4">
+                                    <div>
+                                      <p className="text-gray-500">ROAS</p>
+                                      <p className="font-semibold">{campaign.roas}x</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500">Budget</p>
+                                      <p className="font-semibold">AED {campaign.budget}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500">Spend</p>
+                                      <p className="font-semibold">AED {campaign.spend}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500">Remaining</p>
+                                      <p className="font-semibold">AED {(campaign.budget - campaign.spend).toFixed(1)}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500">Utilization</p>
+                                      <p className="font-semibold">{((campaign.spend / campaign.budget) * 100).toFixed(0)}%</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex gap-2">
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="flex-1 text-xs"
+                                      onClick={() => setCampaignDetails({...campaign, platform})}
+                                    >
+                                      <ExternalLink size={14} className="mr-1" />
+                                      More Details
+                                    </Button>
+                                    <Button className="flex-1 bg-green-500 hover:bg-green-600 text-xs">
+                                      Optimize
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })}
+                        </div>
                       </div>
-                      
-                      <div className="space-y-4 mt-4 max-h-[500px] overflow-y-auto pr-1">
-                        {platforms.find(p => p.id === selectedCampaign)?.campaigns.map(campaign => {
-                          const platform = platforms.find(p => p.id === selectedCampaign);
-                          return (
+                    ) : (
+                      <div className="max-h-[500px] overflow-y-auto pr-1 grid grid-cols-1 gap-4">
+                        {platforms.map((platform) => (
+                          <Card key={platform.id} className={`border border-gray-200 hover:shadow-md ${platform.color} bg-opacity-10`}>
+                            <CardContent className="p-4">
+                              <div className="flex flex-col">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className={`${platform.color} w-3 h-3 rounded-full`}></div>
+                                    <h3 className="font-medium">{platform.name}</h3>
+                                  </div>
+                                  <span className={`text-xs font-medium px-2 py-1 rounded ${platform.color} text-white`}>
+                                    ROAS: {platform.roas}x
+                                  </span>
+                                </div>
+                                
+                                <div className="flex items-center justify-between text-sm mb-3">
+                                  <div className="flex items-center gap-4 text-gray-700">
+                                    <div>Active Ads: <span className="font-semibold">{platform.activeAds}</span></div>
+                                    <div>Spend: <span className="font-semibold">AED {platform.spend}</span></div>
+                                    <div>Revenue: <span className="font-semibold">AED {platform.revenue}</span></div>
+                                  </div>
+                                </div>
+                                
+                                <Button 
+                                  size="sm"
+                                  variant="outline" 
+                                  className="w-full h-8 mt-1 bg-white hover:bg-gray-50"
+                                  onClick={() => setSelectedCampaign(platform.id)}
+                                >
+                                  View {platform.name} Campaigns
+                                  <ArrowRight size={14} className="ml-1" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+              
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2 border-green-300 text-green-700 hover:bg-green-50">
+                    <List size={18} />
+                    <span>View All Running Campaigns</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>All Running Campaigns</SheetTitle>
+                    <SheetDescription>
+                      View all your active campaigns across platforms
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-6">
+                    {platforms.map((platform) => (
+                      <div key={platform.id} className="space-y-3">
+                        <div className={`${platform.color} py-2 px-3 rounded-md text-white flex justify-between items-center`}>
+                          <h3 className="font-medium">{platform.name}</h3>
+                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
+                            ROAS: {platform.roas}x
+                          </span>
+                        </div>
+                        
+                        <div className="space-y-3 ml-2">
+                          {platform.campaigns.map((campaign) => (
                             <Card key={campaign.id} className="overflow-hidden border border-gray-200">
-                              <CardContent className="p-4">
-                                <div className="flex justify-between items-start mb-3">
-                                  <h4 className="font-medium">{campaign.name}</h4>
-                                  <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded">
+                              <CardContent className="p-3">
+                                <div className="flex justify-between items-center mb-2">
+                                  <h4 className="font-medium text-sm">{campaign.name}</h4>
+                                  <span className="text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded">
                                     {campaign.status}
                                   </span>
                                 </div>
                                 
-                                <div className="grid grid-cols-2 gap-2 text-sm mb-4">
+                                <div className="grid grid-cols-3 gap-2 text-xs mb-2">
                                   <div>
-                                    <p className="text-gray-500">ROAS</p>
-                                    <p className="font-semibold">{campaign.roas}x</p>
+                                    <span className="text-gray-500">ROAS: </span>
+                                    <span className="font-semibold">{campaign.roas}x</span>
                                   </div>
                                   <div>
-                                    <p className="text-gray-500">Budget</p>
-                                    <p className="font-semibold">AED {campaign.budget}</p>
+                                    <span className="text-gray-500">Budget: </span>
+                                    <span className="font-semibold">AED {campaign.budget}</span>
                                   </div>
                                   <div>
-                                    <p className="text-gray-500">Spend</p>
-                                    <p className="font-semibold">AED {campaign.spend}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-500">Remaining</p>
-                                    <p className="font-semibold">AED {(campaign.budget - campaign.spend).toFixed(1)}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-500">Utilization</p>
-                                    <p className="font-semibold">{((campaign.spend / campaign.budget) * 100).toFixed(0)}%</p>
+                                    <span className="text-gray-500">Spend: </span>
+                                    <span className="font-semibold">AED {campaign.spend}</span>
                                   </div>
                                 </div>
                                 
-                                <div className="flex gap-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    className="flex-1 text-xs"
-                                    onClick={() => setCampaignDetails({...campaign, platform})}
-                                  >
-                                    <ExternalLink size={14} className="mr-1" />
-                                    More Details
-                                  </Button>
-                                  <Button className="flex-1 bg-green-500 hover:bg-green-600 text-xs">
-                                    Optimize
-                                  </Button>
+                                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mt-1 mb-2">
+                                  <div 
+                                    className={`h-full ${platform.color}`}
+                                    style={{ width: `${(campaign.spend / campaign.budget) * 100}%` }}
+                                  ></div>
+                                </div>
+                                
+                                <div className="flex text-xs text-gray-500 justify-between items-center">
+                                  <div>
+                                    <span>Clicks: </span>
+                                    <span className="font-medium text-gray-700">{campaign.clicks}</span>
+                                  </div>
+                                  <div>
+                                    <span>Customers: </span>
+                                    <span className="font-medium text-gray-700">{campaign.newCustomers + campaign.returningCustomers}</span>
+                                  </div>
+                                  <div>
+                                    <span>Conv: </span>
+                                    <span className="font-medium text-gray-700">{campaign.conversionRate}</span>
+                                  </div>
                                 </div>
                               </CardContent>
                             </Card>
-                          );
-                        })}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="max-h-[500px] overflow-y-auto pr-1 grid grid-cols-1 gap-4">
-                      {platforms.map((platform) => (
-                        <Card key={platform.id} className={`border border-gray-200 ${platform.color} bg-opacity-10`}>
-                          <CardContent className="p-4">
-                            <div className="flex flex-col">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <div className={`${platform.color} w-3 h-3 rounded-full`}></div>
-                                  <h3 className="font-medium">{platform.name}</h3>
-                                </div>
-                                <span className={`text-xs font-medium px-2 py-1 rounded ${platform.color} bg-opacity-20`}>
-                                  ROAS: {platform.roas}x
-                                </span>
-                              </div>
-                              
-                              <div className="flex items-center justify-between text-sm mb-3">
-                                <div className="flex flex-wrap gap-4">
-                                  <div>
-                                    <span className="text-gray-700 mr-1">Active Ads:</span>
-                                    <span className="font-semibold">{platform.activeAds}</span>
-                                  </div>
-                                  <div>
-                                    <span className="text-gray-700 mr-1">Spend: <span className="font-semibold">AED {platform.spend}</span></span>
-                                  </div>
-                                  <div>
-                                    <span className="text-gray-700 mr-1">Revenue: <span className="font-semibold">AED {platform.revenue}</span></span>
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <Button 
-                                size="sm"
-                                variant="outline" 
-                                className="w-full h-8 mt-1 bg-white hover:bg-gray-50"
-                                onClick={() => setSelectedCampaign(platform.id)}
-                              >
-                                View {platform.name} Campaigns
-                                <ArrowRight size={14} className="ml-1" />
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
+                    ))}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </CardContent>
       </Card>

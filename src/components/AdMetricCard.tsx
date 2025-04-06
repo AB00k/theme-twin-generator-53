@@ -9,13 +9,21 @@ interface AdMetricCardProps {
   value: string | number;
   change?: string;
   iconBackground?: string;
+  className?: string;
 }
 
-const AdMetricCard = ({ icon, label, value, change, iconBackground = "bg-blue-500" }: AdMetricCardProps) => {
+const AdMetricCard = ({ 
+  icon, 
+  label, 
+  value, 
+  change, 
+  iconBackground = "bg-blue-500",
+  className
+}: AdMetricCardProps) => {
   const isPositive = change ? !change.includes('-') : false;
   
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+    <div className={cn("bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100", className)}>
       <div className="flex flex-col">
         <div className="flex items-center mb-4">
           <div className={cn("p-3 rounded-full text-white", iconBackground)}>
